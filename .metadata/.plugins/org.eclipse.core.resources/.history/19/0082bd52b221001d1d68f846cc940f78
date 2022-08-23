@@ -1,0 +1,14 @@
+package com.spring.ex.controller;
+
+import org.springframework.ui.Model;
+
+public class PWriteCommand implements PCommand{
+
+	@Override
+	public void execute(Model model) {
+		
+		
+	}
+	
+	
+}

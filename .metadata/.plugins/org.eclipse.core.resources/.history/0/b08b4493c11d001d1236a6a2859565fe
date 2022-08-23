@@ -1,0 +1,25 @@
+package sample1;
+
+public class Circle {
+	private Point point; // Point java에 있는 것들을 멤버로 가짐.
+	private double radius;
+	
+	
+	public Circle(Point point, double radius) {
+		super();
+		this.point = point;
+		this.radius = radius;
+	}
+	
+	public void display() {
+		System.out.println("원의 중심 : ");
+		System.out.println("원의 면적 : ");
+	}
+	
+	public double getArea() {
+		
+	}
+	
+	
+	
+}

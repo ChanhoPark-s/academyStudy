@@ -1,0 +1,33 @@
+package com.spring.ex;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+public class MemberBean {
+	
+	//@NotEmpty(message = "아이디 입력 누락")
+	@NotBlank(message = "@NotBlank")
+	//@NotNull(message = "@NotNull") X
+	private String id;
+	
+	@NotEmpty(message = "비번 입력 누락")
+	private String pw;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPw() {
+		return pw;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	
+	
+	
+}

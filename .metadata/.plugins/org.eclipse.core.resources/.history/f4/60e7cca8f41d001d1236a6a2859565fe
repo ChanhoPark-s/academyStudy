@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- example3.BoardImpl myboard = example3.BoardImpl(); -->
+	
+	<bean class="example3.BoardImpl" id="myboard"/>
+	<bean class="example3.Login" id="login"></bean>
+	<bean class="example3.Hello" id="hello"></bean>
+	<bean class="example3.Dao" id="dao"></bean>
+	
+	<bean class="example3.Logout" id="logout"></bean>
+
+
+</beans>
+<!-- aopExam.xml --> 

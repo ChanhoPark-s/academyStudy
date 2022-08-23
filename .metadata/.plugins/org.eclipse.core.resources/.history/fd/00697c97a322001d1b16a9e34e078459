@@ -1,0 +1,17 @@
+  <!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="album.AlbumBean">
+  	
+  	<insert id="InsertAlbum">
+  		insert into albums(num,title,singer,price)
+  		values(albums_seq.nextval,#{title},#{singer},#{price})
+  		
+  	</insert>
+  </mapper>
+  
+  <!--album.xml mapper파일
+  	 	sql문 뒤에 절대 쓰지말것
+   --> 
+  

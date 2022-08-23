@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean class="myPkg2.PersonImpl" id="person">
+		<property name="name">
+			<value type="java.lang.String">박찬호</value>
+		</property>
+		<property name="age">
+			<value type="int">26</value>
+		</property>
+		<property name="height">
+			<value type="double">170.1</value>
+		</property>
+	</bean>
+	
+	
+	<bean class="myPkg2.StudentImpl" id="student">
+		<property name="per">
+			<value type="Person">50</value>
+		</property>
+		<property name="kor">
+			<value type="int">50</value>
+		</property>
+		<property name="eng">
+			<value type="int">76</value>
+		</property>
+	</bean>
+
+
+</beans>

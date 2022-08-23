@@ -1,0 +1,17 @@
+package com.spring.ex.command;
+
+import java.util.Map;
+
+import org.springframework.ui.Model;
+
+public class writeCommand implements pCommand{
+
+	@Override
+	public void execute(Model model) {
+		
+		Map<String, Object> map = model.asMap();
+		map.get("request");
+		
+	}
+
+}

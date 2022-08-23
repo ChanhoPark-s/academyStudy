@@ -1,0 +1,13 @@
+package album.model;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Component;
+
+// AlbumDao myAlbumDao = new AlbumDao()
+@Component("myAlbumDao") //객체 생성
+public class AlbumDao {
+	
+	private final String namespace = "album.AlbumBean";
+	
+	SqlSessionTemplate sqlSessionTemplate;
+}

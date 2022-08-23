@@ -1,0 +1,16 @@
+package com.spring.ex.command;
+
+import org.springframework.ui.Model;
+
+import com.spring.ex.dao.footBallDao;
+
+public class ListCommand implements pCommand{
+
+	@Override
+	public void execute(Model model) {
+		
+		footBallDao f = footBallDao.getInstance();
+		
+	}
+
+}

@@ -1,0 +1,5 @@
+package myPkg3;
+
+public interface Car {
+	String drive();
+}

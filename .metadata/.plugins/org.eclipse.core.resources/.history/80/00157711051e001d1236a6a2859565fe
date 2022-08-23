@@ -1,0 +1,14 @@
+package example4_¹ÚÂùÈ£;
+
+public class WorkerImpl implements Worker {
+
+	private String name;
+	private int age;
+	private String job;
+	
+	@Override
+	public void excute() {
+		
+	}
+
+}

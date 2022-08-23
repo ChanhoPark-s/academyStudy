@@ -1,0 +1,28 @@
+package album.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import album.model.AlbumDao;
+
+@Controller
+public class AlbumListcontroller {
+	private final String command = "list.ab";
+	private String getPage = "/AlbumList";
+	
+	@Autowired
+	private AlbumDao albumDao;
+	
+	@RequestMapping(command)
+	public ModelAndView doAction() {
+		
+		ModelAndView mav = new ModelAndView(getPage);
+		
+		lists = albumDao.getAlbumList();
+		
+		
+		return mav;
+	}
+}

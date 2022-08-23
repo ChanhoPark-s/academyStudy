@@ -1,0 +1,6 @@
+package com.spring.ex;
+
+public class ExamController {
+	
+	exam/list 요청 => exam/list.jsp로 이동
+}

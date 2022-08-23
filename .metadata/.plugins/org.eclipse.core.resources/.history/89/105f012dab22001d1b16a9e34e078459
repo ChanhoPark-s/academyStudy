@@ -1,0 +1,17 @@
+package album.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class AlbumListcontroller {
+	private final String command = "list.ab";
+	private String getPage = "AlbumList";
+	
+	@RequestMapping(command)
+	public void doAction() {
+		
+		ModelAndView mav = new ModelAndView(getPage);
+	}
+}

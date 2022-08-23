@@ -1,0 +1,9 @@
+package com.spring.ex;
+
+public class BookBean {
+	private String title;
+	private String author;
+	private int price;
+	private String publisher;
+	
+}

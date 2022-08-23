@@ -1,0 +1,10 @@
+package myPkg3;
+
+public class Morining implements Car{
+
+	@Override
+	public String drive() {
+		return "Morining-drive";
+	}
+
+}

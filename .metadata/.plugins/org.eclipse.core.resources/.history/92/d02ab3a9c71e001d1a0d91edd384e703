@@ -1,0 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+
+    personView3.jsp<br>
+    
+    
+    id : ${abcd.id}
+    pw : ${abcd.pw}
+    name : ${abcd.name }
+    addr : ${abcd.addr}

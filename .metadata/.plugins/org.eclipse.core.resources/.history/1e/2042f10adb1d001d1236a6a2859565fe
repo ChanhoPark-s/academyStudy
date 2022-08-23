@@ -1,0 +1,43 @@
+package myPkg2;
+
+public class StudentImpl implements Student{
+
+	
+	@Override
+	public Person getPer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPer(Person per) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getKor() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setKor(int kor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getEng() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setEng(int eng) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+}

@@ -1,0 +1,10 @@
+package com.spring.ex.dto;
+
+public class PDto {
+		private int num;
+		private String id;
+		private String name;
+		private int age;
+		
+		
+}

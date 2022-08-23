@@ -1,0 +1,8 @@
+package com.spring.ex;
+
+public class PersonBean {
+	private String id;
+	private String pw;
+	private String name;
+	private String addr;
+}

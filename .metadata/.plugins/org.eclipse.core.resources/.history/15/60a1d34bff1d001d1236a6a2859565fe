@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<!-- example3.BoardImpl myboard = example3.BoardImpl(); -->
+	
+	<bean class="example3.BoardImpl" id="myboard"/>
+	<bean class="example3.Hello" id="myhello"></bean>
+	<bean class="example3.Login" id="mylogin"></bean>
+	<bean class="example3.Dao" id="mydao"></bean>
+	<bean class="example3.Logout" id="mylogout"></bean>
+	
+	<aop:config>
+		<aop:aspect ref="mydao" order="3">
+			<aop:before method="dao" pointcut="execution(* example3.BoardImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	
+	<aop:config>
+		<aop:aspect ref="mylogin" order="1">
+			<aop:before method="login" pointcut="execution(* example3.BoardImpl.*())"/><!-- BoardImpl안에 메서드이름은 아무거나 -->
+		</aop:aspect>
+	</aop:config>
+
+	<aop:config>
+		<aop:aspect ref="myhello" order="2">
+			<aop:before method="hello" pointcut="execution(* example3.BoardImpl.*())"/>
+		</aop:aspect>
+		
+	</aop:config>
+	
+	<aop:config>
+		<aop:aspect ref="mylogout">
+			<aop:after method="logout" pointcut="execution(* example3.BoardImpl.*())"/>		
+		</aop:aspect>
+	</aop:config>
+	
+	<!--===========================================================================  -->
+	
+	<aop:config>
+		<aop:aspect ref="mylogin">
+			<aop:before method="login" pointcut="execution(* example.OrderImpl.*())"></aop:before>
+		</aop:aspect>	
+	</aop:config>	
+	
+</beans>
+<!-- aopExam.xml
+example3.BoardImpl.*() 괄호안에 아무것도 없어야하고 매개변수 없는  메서드이름은 아무거나. BoardImpl 안에! execution 실행.
+매게 변수 없는 아무 메서드 실행하기 전에 mylogin으로 관리하는 Login 클래스안의 login 메서드를 실행해라 
+
+ --> 

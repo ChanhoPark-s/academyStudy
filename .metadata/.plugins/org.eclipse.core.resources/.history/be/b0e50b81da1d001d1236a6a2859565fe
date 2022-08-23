@@ -1,0 +1,11 @@
+package myPkg2;
+
+public class StudentImpl {
+	
+	public static void main(String[] args) {
+		
+		
+		
+	}
+	
+}

@@ -1,0 +1,5 @@
+package com.spring.ex.controller;
+
+public class PListCommand {
+
+}

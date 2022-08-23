@@ -1,0 +1,15 @@
+package com.spring.ex.controller;
+
+import org.springframework.ui.Model;
+
+public class PWriteCommand implements PCommand{
+
+	@Override
+	public void execute(Model model) {
+		//model.addAttribute("req",request);
+		
+		Map<String,Object>map = model.asMap();
+	}
+	
+	
+}

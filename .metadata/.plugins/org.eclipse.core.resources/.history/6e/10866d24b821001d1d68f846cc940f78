@@ -1,0 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+list.jsp<br>
+
+<table>
+	<tr>
+		<td>번호</td>
+		<td>아이디</td>
+		<td>이름</td>
+		<td>나이</td>
+	</tr>
+</table>

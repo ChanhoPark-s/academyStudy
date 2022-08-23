@@ -1,0 +1,13 @@
+package com.spring.ex.command;
+
+import org.springframework.ui.Model;
+
+public class PUpdateCommand implements PCommand{
+
+	@Override
+	public void execute(Model model) {
+		
+		Map<String, Object> map = model.asMap();
+	}
+	
+}

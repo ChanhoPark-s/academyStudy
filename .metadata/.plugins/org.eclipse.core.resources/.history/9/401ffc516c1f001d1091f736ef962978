@@ -1,0 +1,20 @@
+package myPkg3;
+
+public class Main {
+
+	public static void main(String[] args) {
+		/*
+		철수
+		30
+		모닝
+		
+		PersonDrive() 모닝 : Morning-drive
+						그랜져 : Grandeur-drive
+						
+		*/
+		
+		Consumer con = new Consumer();
+		
+	}
+	
+}

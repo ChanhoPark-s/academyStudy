@@ -1,0 +1,15 @@
+package album.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class AlbumInsertController {
+	
+	private fianl String command = "/insert.ab";
+	
+	@RequestMapping(command)
+	public String form() {
+		return "/AlbumInsertForm";
+	}
+}

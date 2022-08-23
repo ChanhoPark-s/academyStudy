@@ -1,0 +1,33 @@
+package sample2;
+
+import sample1.Point;
+
+public class PointImpl implements Point {
+
+	private double ypos;
+	private double xpos;
+	
+	@Override
+	public double getXpos() {
+		return 0;
+	}
+
+	@Override
+	public void setXpos(double xpos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getYpos() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setYpos(double ypos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

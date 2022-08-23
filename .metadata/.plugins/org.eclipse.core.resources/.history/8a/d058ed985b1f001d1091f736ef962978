@@ -1,0 +1,18 @@
+package com.spring.ex;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class RedirectController {
+	
+	@RequestMapping("form")
+	public String form() {
+		return "redirect/form";
+	}
+	
+	@RequestMapping("input")
+	public String input() {
+		return null;
+	}
+}

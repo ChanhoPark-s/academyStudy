@@ -1,0 +1,6 @@
+package myPkg2;
+
+public class StudentImpl implements Student{
+	
+	
+}

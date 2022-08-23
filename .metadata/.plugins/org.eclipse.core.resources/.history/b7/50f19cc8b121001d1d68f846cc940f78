@@ -1,0 +1,6 @@
+package com.spring.ex.controller;
+
+public class PWriteCommand implements PCommand{
+	
+	
+}

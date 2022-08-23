@@ -1,0 +1,51 @@
+package com.spring.ex.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.spring.ex.command.ListCommand;
+import com.spring.ex.command.pCommand;
+import com.spring.ex.command.writeCommand;
+
+@Controller
+public class fController {
+	
+	pCommand pc =null;
+	
+	
+	@RequestMapping("form")
+	public String form() {
+		return "form";
+	}
+	@RequestMapping("list")
+	public String list(Model model) {
+		
+		pc = new ListCommand();
+		pc.execute(model);
+		
+		return "list";
+	}
+	@RequestMapping("write")
+	public String write(HttpServletRequest request,Model model) {
+		
+		model.addAttribute("request",request);
+		
+		pc = new writeCommand(); 
+		pc.execute(model);
+		
+		return "redirect:list";
+	}
+	@RequestMapping("updateForm")
+	public String updateForm(HttpServletRequest request,Model model) {
+		
+		model.addAttribute("request",request);
+		
+		pc = new updateForm(); 
+		pc.execute(model);
+		
+		return "redirect:list";
+	}
+}

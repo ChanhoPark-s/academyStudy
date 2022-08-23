@@ -1,0 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+result.jsp<br>
+
+이름 : ${param.id }<br>
+나이 : ${param.pw}<br>
+
+
+이름 : ${mb.id }<br>
+나이 : ${mb.pw}<br>

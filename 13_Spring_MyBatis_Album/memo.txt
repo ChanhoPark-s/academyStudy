@@ -1,0 +1,19 @@
+drop table albums;
+create table albums(
+	num number primary key,
+	title varchar2(20),
+	singer varchar2(20),
+	price number,
+	day date default sysdate
+);
+
+drop sequence albums_seq;
+create sequence albums_seq 
+minvalue 1
+start with 1
+nocache;
+
+insert into albums values(albums_seq.nextval,'fake love','bts',2000,default);
+insert into albums values(albums_seq.nextval,'다이너마이트','bts',3000,default);
+commit;
+select * from albums;

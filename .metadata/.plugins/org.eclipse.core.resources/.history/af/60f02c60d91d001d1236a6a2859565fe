@@ -1,0 +1,5 @@
+package myPkg2;
+
+public interface Person {
+	
+}

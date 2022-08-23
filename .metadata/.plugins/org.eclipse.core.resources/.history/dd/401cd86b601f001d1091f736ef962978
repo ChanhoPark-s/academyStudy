@@ -1,0 +1,29 @@
+package myPkg1;
+
+public class CircleImpl implements Circle {
+
+	
+	Shape pointX;
+	int x;
+	int y;
+	int radius;
+	
+	public CircleImpl() {
+		System.out.println("CircleImpl 생성자");
+	}
+	@Override
+	public int getX() {
+		return 0;
+	}
+
+	@Override
+	public int getY() {
+		return 0;
+	}
+
+	@Override
+	public String make() {
+		return null;
+	}
+	
+}

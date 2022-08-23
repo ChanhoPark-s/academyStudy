@@ -1,0 +1,8 @@
+package example2;
+
+public class Login {
+	
+	public static void loing(String msg) {
+		System.out.println(msg+"한 후 로그아웃 수행");
+	}
+}

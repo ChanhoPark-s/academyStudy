@@ -1,0 +1,16 @@
+package myPkg1;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		PointX px = new PointX();
+		PointY py = new PointY();
+		
+		CircleImpl circle = new CircleImpl();
+		circle.setPointX(px);
+		System.out.println(circle.make());
+		
+	
+	}
+}

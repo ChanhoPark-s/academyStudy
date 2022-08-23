@@ -1,0 +1,11 @@
+package album.model;
+
+public class AlbumBean {
+	private int num;
+	private String title;
+	private String singer;
+	private int price;
+	private String day;
+	
+	
+}

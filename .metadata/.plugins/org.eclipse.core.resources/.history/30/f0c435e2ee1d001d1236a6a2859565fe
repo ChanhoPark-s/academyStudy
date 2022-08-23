@@ -1,0 +1,12 @@
+package example1;
+
+public class Board {
+	
+	public void board() {
+		String msg = "게시물 등록";
+		
+		
+		System.out.println(msg+"을 하기위한 로그인 수행");
+		
+	}
+}

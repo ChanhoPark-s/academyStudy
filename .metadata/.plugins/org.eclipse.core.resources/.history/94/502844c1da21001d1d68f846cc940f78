@@ -1,0 +1,36 @@
+package com.spring.ex.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class footBallDao {
+	String driver = "oracle.jdbc.driver.OracleDriver";
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl";
+	String id = "jspid";
+	String pw = "jsppw";
+	Connection  conn = null;
+	PreparedStatement  ps =null;
+	ResultSet  rs = null;
+
+	private static footBallDao instance;
+
+	private footBallDao(){
+	    try {
+	       Class.forName(driver);
+	       conn = DriverManager.getConnection(url, id, pw);
+	       System.out.println("연결 성공");
+	    } catch (ClassNotFoundException  | SQLException e) {
+	       System.out.println("연결 실패");
+	    }
+	 }//
+
+	public static footBallDao getInstance() {
+		if(instance==null) {
+			instance = new footBallDao();
+		}
+		return instance;
+	}
+}

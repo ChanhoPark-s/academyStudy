@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean class="myPkg2.PersonImpl" id="per">
+		<constructor-arg>
+			<value type="java.lang.String">조이</value>
+		</constructor-arg>
+		
+		<constructor-arg>
+			<value>30</value>
+		</constructor-arg>
+		
+		<constructor-arg>
+			<value>162.8</value>
+		</constructor-arg>
+
+	</bean>
+	
+	
+	<bean class="myPkg2.StudentImpl" id="stu">
+		<property name="per">
+			<ref bean="per"/>
+		</property>
+		<property name="kor">
+			<value type="int">70</value>
+		</property>
+		<property name="eng" value="80"></property>
+	</bean>
+
+	<bean class="myPkg2.MyInfo" id="my">
+		<property name="per">
+			<ref bean="per"/>
+		</property>
+		
+		<property name="stu">
+			<ref bean="stu"/>
+		</property>
+	</bean>
+	
+
+</beans>

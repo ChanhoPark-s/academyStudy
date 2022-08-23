@@ -1,0 +1,24 @@
+package album.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class AlbumInsertController {
+	
+	private final String command = "/insert.ab";
+	// final 쓰는 이유 : 변하지 않게해야 함 안하면 에러뜸
+	private String getPage = "/AlbumInsertForm";
+	
+	@RequestMapping(command,method="get")//get방식 요청
+	public String form() {
+		return getPage;
+		// /WEB-INF/album/AlbumInsertForm.jsp
+	}
+	
+	@RequestMapping(command)//get방식 요청
+	public String form() {
+		return getPage;
+		// /WEB-INF/album/AlbumInsertForm.jsp
+	}
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+	
+	
+	<bean class="example4_박찬호.End" id="End"></bean>
+	<bean class="example4_박찬호.Goodbye" id="Goodbye"></bean>
+	<bean class="example4_박찬호.Hello" id="Hello"></bean>
+	<bean class="example4_박찬호.Start" id="Start"></bean>
+	<bean class="example4_박찬호.StudentImpl" id="Student" p:name="조정석" p:age="10" p:grade="3" p:ban="5"></bean>
+	<bean class="example4_박찬호.WorkerImpl" id="Worker" c:name="윤아" c:age="35" c:job="개발자"></bean>
+	
+	
+	<aop:config>
+		<aop:aspect ref="Start">
+			<aop:before method="start" pointcut="execution(* example4_박찬호.StudentImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="Hello">
+			<aop:before method="hello" pointcut="execution(* example4_박찬호.StudentImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="End">
+			<aop:after method="end" pointcut="execution(* example4_박찬호.StudentImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
+	<!-- ================================================================================== -->
+	
+	
+	<aop:config>
+		<aop:aspect ref="Start">
+			<aop:before method="start" pointcut="execution(* example4_박찬호.WorkerImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="End">
+			<aop:after method="end" pointcut="execution(* example4_박찬호.WorkerImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:aspect ref="Goodbye">
+			<aop:after method="goodbye" pointcut="execution(* example4_박찬호.WorkerImpl.*())"/>
+		</aop:aspect>
+	</aop:config>
+</beans>

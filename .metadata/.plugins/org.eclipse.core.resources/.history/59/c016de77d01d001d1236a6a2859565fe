@@ -1,0 +1,14 @@
+package example2;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		CalcBean cb = new CalcBeanImpl(2);
+		
+		cb.CalcBeanImpl();
+		
+		
+	}
+
+}

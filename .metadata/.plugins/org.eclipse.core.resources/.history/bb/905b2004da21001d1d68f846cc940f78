@@ -1,0 +1,21 @@
+package com.spring.ex.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class fController {
+	
+	@RequestMapping("form")
+	public String form() {
+		return "form";
+	}
+	@RequestMapping("list")
+	public String list() {
+		return "list";
+	}
+	@RequestMapping("write")
+	public String write() {
+		return "redirect:list";
+	}
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+	
+	
+	<bean class="example4_박찬호.End" id="end"></bean>
+	<bean class="example4_박찬호.Goodbye" id="goodbye"></bean>
+	<bean class="example4_박찬호.Hello" id="hello"></bean>
+	<bean class="example4_박찬호.Start" id="start"></bean>
+	<bean class="example4_박찬호.StudentImpl" id="student" c:name="조정석" c:age="10" c:grade="3" c:ban="5"></bean>
+	<bean class="example4_박찬호.WorkerImpl" id="worker"></bean>
+	
+</beans>

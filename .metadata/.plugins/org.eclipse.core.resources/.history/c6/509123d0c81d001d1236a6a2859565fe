@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- sample3.PointIml point = new sample3.PointImpl() -->
+	<bean class="sample3.PointImpl" id="point">
+		<Property name="xpos">
+			<value></value>
+		</Property>
+	</bean>
+</beans>
+
+
+
+
+<!-- 
+xml 생성 방법
+
+	src main resources 에서 
+	
+	other xml-xml 
+	
+	or 
+	
+	Spring - Bean Configuration File
+
+ -->

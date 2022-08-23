@@ -1,0 +1,24 @@
+package com.spring.ex.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class fController {
+	
+	@RequestMapping("form")
+	public String form() {
+		return "form";
+	}
+	@RequestMapping("list")
+	public String list() {
+		return "list";
+	}
+	@RequestMapping("write")
+	public String write(HttpServletRequest request,Model model) {
+		return "redirect:list";
+	}
+}

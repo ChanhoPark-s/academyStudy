@@ -1,0 +1,7 @@
+package myPkg1;
+
+public class Student {
+	private Person per;
+	private int kor;
+	private int eng;
+}

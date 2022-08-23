@@ -1,0 +1,9 @@
+package album.model;
+
+import org.springframework.stereotype.Component;
+
+// AlbumDao myAlbumDao = new AlbumDao()
+@Component("myAlbumDao") //객체 생성
+public class AlbumDao {
+	
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<mvc:annotation-driven/> <!-- 유효성 검사할때 필요 -->
+	
+	<!--ViewResolver  -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/album"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	<!-- controller 위치 설정 -->
+	<context:component-scan base-package="album"></context:component-scan><!-- album 패키지를 확인한다. -->
+</beans>
+<!-- *.ab요청을 받으면 album-servlet.xml로 가서 album.xxx 스캔해서 @Controller가 있는지 확인해봐라  -->

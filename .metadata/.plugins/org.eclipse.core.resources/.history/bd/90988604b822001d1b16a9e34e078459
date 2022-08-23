@@ -1,0 +1,47 @@
+package album.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import album.model.AlbumBean;
+import album.model.AlbumDao;
+
+@Controller
+public class AlbumListcontroller {
+	private final String command = "list.ab";
+	private String getPage = "/AlbumList";
+	
+	@Autowired
+	private AlbumDao albumDao;
+	
+	/*
+	list.ab 요청하는곳
+	
+		1. start.jsp 에서 목록보기 
+		2. 목록보기에서 검색할 때
+	*/
+	
+	@RequestMapping(command)
+	public ModelAndView doAction(@RequestParam("whatColumn") String whatColumn,
+								@RequestParam("keyword") String keyword	) {
+		System.out.println("whatColumn : "+whatColumn);
+		System.out.println("keyword :"+keyword);
+		
+		//String whatColumn = request.getparameter("whatColumn");
+		
+		ModelAndView mav = new ModelAndView(getPage);
+		
+		List<AlbumBean>lists = new ArrayList<AlbumBean>();
+		lists = albumDao.getAlbumList();
+		mav.addObject("lists",lists);
+		
+		
+		return mav;
+	}
+}
