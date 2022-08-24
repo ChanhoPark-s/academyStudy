@@ -13,7 +13,7 @@
 AlbumInsertForm.jsp <br>
 
 <form:form commandName="album" action="insert.ab" method="post">
-<h1><span>앨범 추가 화면</span></h1>
+<h1><span>앨범 추가</span></h1>
 	<p>
 		<label>노래제목</label>
 		<input type="text" name="title"  value="${album.title }">

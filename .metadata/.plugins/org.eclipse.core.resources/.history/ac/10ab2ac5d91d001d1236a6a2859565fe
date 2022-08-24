@@ -1,5 +1,0 @@
-package myPkg2;
-
-public interface Student {
-
-}

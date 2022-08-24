@@ -1,6 +1,0 @@
-package example2;
-
-public class CalcBean {
-	public void calculate();
-	public void calculate();
-}

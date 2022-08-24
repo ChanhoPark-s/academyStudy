@@ -19,11 +19,14 @@ public class AlbumDetailController {
 	private AlbumDao albumdao;
 	
 	@RequestMapping(command)
-	public String detail(@RequestParam(value="num",required=true)int num,Model model) {
+	public String detail(@RequestParam(value="num",required=true)int num,
+						@RequestParam(value="pageNumber",required = false)String pageNumber,
+						Model model) {
 		
-		
+	
 	AlbumBean album = albumdao.getAlbum(num);	
 	
+	model.addAttribute("pageNumber",pageNumber);
 	model.addAttribute("album",album);
 	return getPage;
 	}

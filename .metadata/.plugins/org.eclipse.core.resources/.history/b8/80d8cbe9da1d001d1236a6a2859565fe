@@ -1,9 +1,0 @@
-package myPkg2;
-
-public class PersonImpl implements Person{
-	private String name;
-	private int age;
-	private double height;
-	
-	
-}

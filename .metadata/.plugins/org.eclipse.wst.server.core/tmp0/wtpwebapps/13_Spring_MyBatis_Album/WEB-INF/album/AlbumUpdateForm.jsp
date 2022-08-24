@@ -13,7 +13,8 @@
     
     <h2>상품 수정 화면</h2>
    <form:form commandName="album" action="update.ab" method="post">
-    	<input type="hidden" name= num value="${album.num }">
+    	<input type="hidden" name="num" value="${album.num }">
+    	<input type="hidden" name="pageNumber" value="${pageNumber }">
     <table border="1">
     	<tr>
     		<td>노래제목</td>

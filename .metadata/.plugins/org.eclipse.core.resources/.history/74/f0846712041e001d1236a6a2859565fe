@@ -1,7 +1,0 @@
-package example4_박찬호;
-
-public class Goodbye {
-	public void Goodbye() {
-		System.out.println("안녕하세요");
-	}
-}

@@ -1,6 +1,0 @@
-package sample1;
-
-public class Point {
-	private double xpos;
-	private double ypos;
-}

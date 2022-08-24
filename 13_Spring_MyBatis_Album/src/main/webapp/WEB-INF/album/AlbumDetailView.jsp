@@ -33,7 +33,7 @@
     		</td>
     	</tr>
     	<tr>
-    		<td colspan="2"><a href="list.ab">앨범 리스트 화면으로 돌아감</a></td>
+    		<td colspan="2"><a href="list.ab?pageNumber=${pageNumber }">앨범 리스트 화면으로 돌아감</a></td>
     	</tr>
     
     

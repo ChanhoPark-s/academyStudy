@@ -1,8 +1,0 @@
-package sample2;
-
-import sample1.Point;
-
-public class CircleImpl {
-	private Point point; 
-	private double radius;
-}

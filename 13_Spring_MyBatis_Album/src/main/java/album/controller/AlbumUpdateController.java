@@ -27,35 +27,37 @@ public class AlbumUpdateController {
 	
 	
 	@RequestMapping(command)
-	public String updateForm(@RequestParam("num") int num,Model model) {
+	public String updateForm(@RequestParam("num") int num,
+							@RequestParam(value="pageNumber",required = false) String pageNumber,
+							Model model) {
 		
 		AlbumBean  album = albumdao.getAlbum(num);
 		
+		model.addAttribute("pageNumber", pageNumber);
 		model.addAttribute("album",album);
 		
 		return getPage;
 	}
 	
 	@RequestMapping(value=command,method = RequestMethod.POST)
-	public ModelAndView delete(@ModelAttribute("album") @Valid AlbumBean ab,BindingResult result) {
+	public ModelAndView update(
+			@RequestParam(value="pageNumber",required = false) String pageNumber,
+			@ModelAttribute("album") @Valid AlbumBean ab,BindingResult result) {
 		
-		System.out.println("번호 : "+ab.getNum());
-		System.out.println("제목 : "+ab.getTitle());
-		System.out.println("가수명 : "+ab.getSinger());
-		System.out.println("가격 : "+ab.getPrice());
-		System.out.println("발매일 : "+ab.getDay());
-		System.out.println("----------------");
-		
+	
 		ModelAndView mav = new ModelAndView();
+		
 		if(result.hasErrors()) {
+			
+			mav.addObject("pageNumber"+pageNumber);
 			mav.setViewName(getPage);
 			return mav;
 			//return getPage;
 		}
 		
-		
 		albumdao.updateAlbum(ab);
-		mav.setViewName(gotoPage);
+		
+		mav.setViewName(gotoPage+"?pageNumber="+pageNumber);
 		return mav;
 		//return gotoPage;
 	}

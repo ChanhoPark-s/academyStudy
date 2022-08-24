@@ -1,8 +1,0 @@
-package example3;
-
-public class Logout {
-	
-	public static void logout(String msg) {
-		System.out.println("로그아웃 수행");
-	}
-}

@@ -7,9 +7,8 @@
 		
 		location.href="insert.ab";
 	}
-	function goUpdate(num){
-		
-		location.href="update.ab?num="+num;
+	function goUpdate(num,pageNumber){
+		location.href="update.ab?num="+num+"&pageNumber="+pageNumber; 
 	}
 
 </script>
@@ -47,7 +46,7 @@ Album.List.jsp<br>
 		<tr>
 			<td>${ab.num }</td>
 			<td>
-			<a href="detail.ab?num=${ab.num }">${ab.title }</a></td>
+			<a href="detail.ab?num=${ab.num }&pageNumber=${pageInfo.pageNumber}">${ab.title }</a></td>
 			<td>${ab.singer }</td>
 			<td>
 				<fmt:formatNumber pattern="###,###" value="${ab.price }" var="price"/>${price }원
@@ -59,7 +58,7 @@ Album.List.jsp<br>
 			</td>
 			<td><a href="delete.ab?num=${ab.num }">삭제</a></td>
 			<td>
-				<input type="button" value="수정" onClick="goUpdate(${ab.num})">
+				<input type="button" value="수정" onClick="goUpdate(${ab.num},${pageInfo.pageNumber })">
 			</td>
 		</tr>
 	</c:forEach>
