@@ -1,0 +1,65 @@
+  <!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!--이름은 아무거나.  -->
+  <mapper namespace="album.AlbumBean">
+  	
+  	<insert id="InsertAlbum" >
+  	<!--parameterType="album.model.AlbumBean" AlbumBean 타입이다. -->
+  		insert into albums(num,title,singer,price)
+  		values(albums_seq.nextval,#{title},#{singer},#{price})
+  		
+  	</insert>
+  	
+  	<!--한줄타입쓴다. -->
+  	<select id="GetAllData" resultType="album.model.AlbumBean" parameterType="hashmap">
+  		select * from albums 
+  		
+  		<if test="whatColumn== 'singer'">
+  			where singer like #{keyword}
+  		</if>
+  		<if test="whatColumn== 'title'">
+  			where title like #{keyword}
+  		</if>
+  		<if test="whatColumn== ''">
+  			where title like #{keyword} or singer like #{keyword}
+  		</if>
+  		
+  		
+  		order by num
+  	</select>
+  	
+  	<select id="GetAlbum" parameterType="int" resultType="album.model.AlbumBean">
+  		select * from albums
+		where num= #{num}  		
+  	</select>
+  	
+  	<delete id="DeleteAlbum">
+  		delete albums where num = #{num}
+  	</delete>
+  	
+  	<update id="UpdateAlbum">
+  		update albums 
+  		set title = #{title},
+  		singer = #{singer},
+  		price = #{price},
+  		day = #{day} 
+  		where num = #{num}
+  		
+  	</update>
+  	
+  	<select id="GetTotalCount">
+  	
+  	
+  	</select>
+  	
+  </mapper>
+  
+  <!--album.xml mapper파일
+  	 	sql문 뒤에 절대 쓰지말것 ;
+  	 	insert : parameterType : 생략가능
+  	 	
+  	 	insert delete update : resultType : int 절대 쓰면 안됨
+  	 	select : resultType : 꼭 써야한다.
+   --> 
+  

@@ -1,0 +1,21 @@
+package album.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class AlbumDetailController {
+	/*
+	 * 상세보기 요청이 들어오면 상세보기 jsp로 이동
+	 * 
+	 * 변수 2개
+	 */
+	private final getPage ="list.ab";
+	
+	@RequestMapping("detail.ab")
+	public String detail() {
+		
+		
+		
+	}
+}
