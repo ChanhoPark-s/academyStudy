@@ -1,0 +1,53 @@
+drop table travel;
+create table travel(
+	num number primary key,
+	name varchar2(10),
+	age number,
+	area varchar2(30),
+	style varchar2(15),
+	price varchar2(10)
+);
+
+drop sequence travel_seq;
+create sequence travel_seq 
+minvalue 1
+start with 1
+nocache;
+
+
+insert into travel
+values(travel_seq.nextval, '수지',21, '동남아','패키지','200~300');
+
+commit;
+
+select * from travel;
+
+@Controller
+@RequestMapping
+@Autowired
+@Qualifier
+@Component
+@NotEmpty
+@NotNull
+@NotBlank
+@Valid
+@RequestParam
+@Length
+@Size
+@Pattern
+@Max
+@Min
+
+@WebServlet
+@WebInitParam
+@ModelAttribute
+@Override
+
+
+
+
+
+
+
+
+
