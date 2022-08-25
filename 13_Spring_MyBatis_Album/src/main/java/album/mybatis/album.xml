@@ -12,7 +12,7 @@
   	</insert>
   	
   	<!--한줄타입쓴다. -->
-  	<select id="GetAllData" resultType="album.model.AlbumBean" parameterType="hashmap">
+  	<select id="GetAllData" resultType="MyAlbum" parameterType="hashmap">
   		select * from albums 
   		
   		<if test="whatColumn== 'singer'">
@@ -29,7 +29,7 @@
   		order by num
   	</select>
   	
-  	<select id="GetAlbum" parameterType="int" resultType="album.model.AlbumBean">
+  	<select id="GetAlbum" parameterType="int" resultType="MyAlbum">
   		select * from albums
 		where num= #{num}  		
   	</select>

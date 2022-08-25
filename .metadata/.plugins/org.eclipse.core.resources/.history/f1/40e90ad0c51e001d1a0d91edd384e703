@@ -1,9 +1,0 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-personView2.jsp<br>
-
-
-id : ${personbean.id}
-pw : ${personbean.pw}
-name : ${personbean.name}
-addr : ${personbean.addr}

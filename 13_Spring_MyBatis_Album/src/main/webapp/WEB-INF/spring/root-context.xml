@@ -29,6 +29,7 @@
 	sqlSessionFactoryBean.setMapperLocations("classpath:/album/mybatis/album.xml"); 
 	-->
 	
+	<!-- 별칭위치 -->
 	<bean id="sqlSessionFactoryBean" 
 			class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
@@ -38,7 +39,7 @@
 			<value>classpath:/album/mybatis/album.xml</value>
 		</property>
 	</bean>
-	
+	<!--  -->
 	
 	<!-- 
 	org.mybatis.spring.SqlSessionTemplate sqlSessionTemplate = 

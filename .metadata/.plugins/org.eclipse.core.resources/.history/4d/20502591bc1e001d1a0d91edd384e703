@@ -1,7 +1,0 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-
-person/result1.jsp <br>
-
-이름 : ${name}<br>
-나이 : ${age}<br.

@@ -1,8 +1,0 @@
-package com.spring.ex;
-
-public class MusicBean {
-	private String title;
-	private String singer;
-	private int price;
-	
-}

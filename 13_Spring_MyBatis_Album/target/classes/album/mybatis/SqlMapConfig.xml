@@ -3,9 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
   
-  
+  <!--configuration 까지는 만들어야함  -->
   <configuration>
-  	
+  	<typeAliases>
+  		<typeAlias type="album.model.AlbumBean" alias="MyAlbum"/>
+  	</typeAliases>
   </configuration>
   
     <!--SqlMapConfig.xml  --> 
+    
+    <!-- SQL 별칭 지정할 때  --> 

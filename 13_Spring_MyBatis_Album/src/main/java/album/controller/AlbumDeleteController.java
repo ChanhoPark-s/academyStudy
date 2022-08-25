@@ -1,6 +1,7 @@
 package album.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,10 +19,11 @@ public class AlbumDeleteController {
 	private AlbumDao albumdao;
 	
 	@RequestMapping(command)
-	public String delete(@RequestParam("num") int num) {
+	public String delete(@RequestParam("num") int num,
+						@RequestParam(value="pageNumber",required = false) String pageNumber) {
 		
 		albumdao.deleteAlbum(num);
 		
-		return gotoPage;
+		return gotoPage+"?pageNumber="+pageNumber;
 	}
 }

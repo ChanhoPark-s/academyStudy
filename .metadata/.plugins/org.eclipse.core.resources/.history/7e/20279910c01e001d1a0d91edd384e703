@@ -1,9 +1,0 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-personView1.jsp<br>
-
-
-id : ${param.id }
-pw : ${param.pw }
-name : ${param.name }
-addr : ${param.addr}

@@ -56,7 +56,7 @@ Album.List.jsp<br>
 				<fmt:formatDate var="newformattedDay" value="${formattedDay }" pattern="yyyy-MM-dd"/>
 				${newformattedDay }
 			</td>
-			<td><a href="delete.ab?num=${ab.num }">삭제</a></td>
+			<td><a href="delete.ab?num=${ab.num }&pageNumber=${pageInfo.pageNumber}">삭제</a></td>
 			<td>
 				<input type="button" value="수정" onClick="goUpdate(${ab.num},${pageInfo.pageNumber })">
 			</td>

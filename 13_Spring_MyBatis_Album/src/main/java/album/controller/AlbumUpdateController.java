@@ -49,7 +49,7 @@ public class AlbumUpdateController {
 		
 		if(result.hasErrors()) {
 			
-			mav.addObject("pageNumber"+pageNumber);
+			mav.addObject("pageNumber"+pageNumber); // 받아주는 updateForm이 바로 Table 안에 ${} 작성하니 addObject로 속성설정해서 보내야함.
 			mav.setViewName(getPage);
 			return mav;
 			//return getPage;
@@ -57,7 +57,7 @@ public class AlbumUpdateController {
 		
 		albumdao.updateAlbum(ab);
 		
-		mav.setViewName(gotoPage+"?pageNumber="+pageNumber);
+		mav.setViewName(gotoPage+"?pageNumber="+pageNumber); // 받아주는 list.ab 에서 RequestParam 형태로 받아주니 parameter 형태로 넘겨야한다.
 		return mav;
 		//return gotoPage;
 	}

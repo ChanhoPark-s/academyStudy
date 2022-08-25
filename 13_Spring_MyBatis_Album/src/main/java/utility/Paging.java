@@ -203,7 +203,7 @@ public class Paging {
 		
 		this.beginRow = ( this.pageNumber - 1 )  * this.pageSize  + 1 ;
 		this.endRow =  this.pageNumber * this.pageSize ;
-		if( this.pageNumber > this.totalPage ){
+		if( this.pageNumber > this.totalPage ){ // 택한 page가 총 페이지보다 크면 마지막 페이지로 가라
 			this.pageNumber = this.totalPage ;
 		}
 		
