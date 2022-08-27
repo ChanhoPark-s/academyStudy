@@ -14,7 +14,7 @@
 		where style like #{keyword}
 		</if>
 		
-		order by num
+		order by num desc
 	</select>
 	
 	<insert id="insertTravel">
@@ -34,5 +34,16 @@
 		</if>
 		
 	</select>
+	
+	<select id="GetDataByNum" resultType="MyTravel">
+		select * from travel where num=#{num}
+	</select>
+	
+	<update id="updateTravel">
+		update travel set name=#{name} , age = #{age} , area= #{area}, style=#{style} , price = #{price} where num=#{num}
+	</update>
+	<delete id="DeleteTravel">
+		delete travel where num=#{num}
+	</delete>
 </mapper>
 <!-- travel.xml -->

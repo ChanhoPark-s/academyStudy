@@ -5,7 +5,66 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2022-08-23T07:00:00Z</updated>
+  <updated>2022-08-25T07:00:00Z</updated>
+  <entry>
+    <title>A Bootiful Podcast: Fellow Java Champion and TimescaleDB developer advocate Christoph Engelbert</title>
+    <link rel="alternate" href="https://spring.io/blog/2022/08/25/a-bootiful-podcast-fellow-java-champion-and-timescaledb-developer-advocate-christoph-engelbert" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2022-08-25:4893</id>
+    <updated>2022-08-25T07:00:00Z</updated>
+    <content type="html">&lt;p&gt;Hi, Spring fans! In this installment, Josh Long (@starbuxman) talks to fellow Java Champion and TimescaleDB developer advocate Christoph Engelbert (@noctarius2k) about PostgreSQL, Java, time series databases, observability, and so much more. &lt;/p&gt;
+&lt;iframe title="Fellow Java Champion and TimescaleDB developer advocate Christoph Engelbert " allowtransparency="true" height="150" width="100%" style="border: none; min-width: min(100%, 430px);" scrolling="no" data-name="pb-iframe-player" src="https://www.podbean.com/player-v2/?i=i9efu-12aa2ed-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7"&gt;&lt;/iframe&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Batch 5.0.0-M5 is available now!</title>
+    <link rel="alternate" href="https://spring.io/blog/2022/08/24/spring-batch-5-0-0-m5-is-available-now" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Mahmoud Ben Hassine</name>
+    </author>
+    <id>tag:spring.io,2022-08-25:4892</id>
+    <updated>2022-08-24T17:01:00Z</updated>
+    <content type="html">&lt;p&gt;I am pleased to announce that Spring Batch &lt;code&gt;5.0.0-M5&lt;/code&gt; is now available from our &lt;a href="https://repo.spring.io/milestone"&gt;milestone repository&lt;/a&gt;. The main theme of this milestone is improving testing support in Spring Batch. This post walks through the major changes in this area as well as other changes introduced in this milestone release. For the complete list of changes, see the &lt;a href="https://github.com/spring-projects/spring-batch/releases/tag/5.0.0-M5"&gt;release notes&lt;/a&gt;.&lt;/p&gt;&lt;h2&gt;&lt;a href="#test-utilities-configuration-updates" class="anchor" name="test-utilities-configuration-updates"&gt;&lt;/a&gt;Test utilities configuration updates&lt;/h2&gt;
+&lt;p&gt;Up to version 4.3, the &lt;code&gt;JobLauncherTestUtils&lt;/code&gt; used to autowire the job under test with the goal of facilitating the test setup. But what if multiple jobs are defined in the test context? And what if no &lt;code&gt;Job&lt;/code&gt; beans are defined at all? So while this autowiring was convenient for most cases, it turned out to cause several issues in the aforementioned situations. In this release, and based on community feedback, we have decided to remove the autowiring of any job in &lt;code&gt;JobLauncherTestUtils&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Similarly, the &lt;code&gt;JobRepositoryTestUtils&lt;/code&gt; used to autowire a &lt;code&gt;DataSource&lt;/code&gt; from the application context. Again, what if no data source or multiple data sources are defined in the test context? In this version, the &lt;code&gt;JobRepositoryTestUtils&lt;/code&gt; was updated to work against the &lt;code&gt;JobRepository&lt;/code&gt; interface, without having to deal with any implementation details of the repository (such as a data source, for example).&lt;/p&gt;
+&lt;p&gt;If you define those utility beans manually in your test context or import them through &lt;code&gt;@SpringBatchTest&lt;/code&gt;, you would manually set the job under test or the test data source when multiple beans of those types are defined in your test context.&lt;/p&gt;&lt;h2&gt;&lt;a href="#migration-to-junit-jupiter" class="anchor" name="migration-to-junit-jupiter"&gt;&lt;/a&gt;Migration to JUnit Jupiter&lt;/h2&gt;
+&lt;p&gt;In this milestone release, the entire test suite of Spring Batch was migrated to JUnit 5. While this does not impact end users directly, it helps the Batch team as well as community contributors to use the next generation of JUnit to write better tests.&lt;/p&gt;&lt;h2&gt;&lt;a href="#improved-documentation" class="anchor" name="improved-documentation"&gt;&lt;/a&gt;Improved documentation&lt;/h2&gt;
+&lt;p&gt;In this milestone release, the documentation was updated to use the &lt;a href="https://github.com/spring-io/spring-asciidoctor-backends"&gt;Spring Asciidoctor Backend&lt;/a&gt;. This backend ensures that all projects from the portfolio follow the same documentation style. For consistency with other projects, the reference documentation of Spring Batch was updated to use this backend in this release. You can check the new version of the reference documentation &lt;a href="https://docs.spring.io/spring-batch/docs/5.0.0-M5/reference/html/"&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;h2&gt;&lt;a href="#deprecations-and-api-changes" class="anchor" name="deprecations-and-api-changes"&gt;&lt;/a&gt;Deprecations and API changes&lt;/h2&gt;
+&lt;p&gt;This release includes a number of deprecations and API changes.&lt;/p&gt;&lt;h3&gt;&lt;a href="#deprecations" class="anchor" name="deprecations"&gt;&lt;/a&gt;Deprecations&lt;/h3&gt;
+&lt;p&gt;This milestone release introduces the following deprecations:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The Hibernate (cursor/paging) item reader and item writer were deprecated in favor of using the JPA-based ones.&lt;/li&gt;
+  &lt;li&gt;The &lt;code&gt;org.springframework.batch.test.AssertFile&lt;/code&gt; utility class was deprecated in favor of similar utilities provided by modern test libraries.&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;&lt;a href="#api-changes" class="anchor" name="api-changes"&gt;&lt;/a&gt;API changes&lt;/h3&gt;
+&lt;p&gt;In this release, we introduced a breaking change in the &lt;code&gt;ItemWriter&lt;/code&gt; interface:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;public interface ItemWriter&amp;lt;T&amp;gt; {&#xD;
+&#xD;
+-- void write(List&amp;lt;? extends T&amp;gt; items) throws Exception;&#xD;
+++ void write(Chunk&amp;lt;? extends T&amp;gt; items) throws Exception;&#xD;
+&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;While this change seems small, we believe it has a huge added value in terms of better encapsulation and consistency in using a coherent language across different areas and APIs of the framework. The &lt;code&gt;ItemWriteListener&lt;/code&gt; API was changed to use the &lt;code&gt;Chunk&lt;/code&gt; API as well.&lt;/p&gt;
+&lt;p&gt;As the &lt;code&gt;Chunk&lt;/code&gt; API implements &lt;code&gt;java.lang.Iterable&lt;/code&gt;, this change does not impact any client code that iterates over the list of items. Moreover, this change does not impact any example that uses a lambda expression to define an &lt;code&gt;ItemWriter&lt;/code&gt;, as the type of the items is inferred. See the &lt;a href="https://github.com/spring-projects/spring-batch/wiki/Spring-Batch-5.0-Migration-Guide"&gt;migration guide&lt;/a&gt; for all details about the changed APIs.&lt;/p&gt;&lt;h2&gt;&lt;a href="#dependencies-upgrades" class="anchor" name="dependencies-upgrades"&gt;&lt;/a&gt;Dependencies upgrades&lt;/h2&gt;
+&lt;p&gt;Major dependencies have been upgraded to the following versions:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Upgrade to Spring Framework 6.0.0-M5&lt;/li&gt;
+  &lt;li&gt;Upgrade to Spring Data 2022.0.0-M5&lt;/li&gt;
+  &lt;li&gt;Upgrade to Spring Integration 6.0.0-M4&lt;/li&gt;
+  &lt;li&gt;Upgrade to Spring AMQP 3.0.0-M3&lt;/li&gt;
+  &lt;li&gt;Upgrade to Spring for Apache Kafka 3.0.0-M5&lt;/li&gt;
+  &lt;li&gt;Upgrade to Micrometer 1.10.0-M4&lt;/li&gt;
+  &lt;li&gt;Upgrade to Hibernate 6.1.2.Final&lt;/li&gt;
+&lt;/ul&gt;&lt;h2&gt;&lt;a href="#feedback" class="anchor" name="feedback"&gt;&lt;/a&gt;Feedback&lt;/h2&gt;
+&lt;p&gt;We would like to thank all contributors who had a role in this release! As we continue our work on Spring Batch 5, we look forward to your feedback on &lt;a href="https://github.com/spring-projects/spring-batch/issues"&gt;Github&lt;/a&gt;, &lt;a href="https://twitter.com/springbatch"&gt;Twitter&lt;/a&gt; and &lt;a href="https://stackoverflow.com/questions/tagged/spring-batch"&gt;StackOverflow&lt;/a&gt;.&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;&lt;a href="https://spring.io/projects/spring-batch"&gt;Spring Batch Home&lt;/a&gt;|&lt;a href="https://github.com/spring-projects/spring-batch"&gt;Source on Github&lt;/a&gt;|&lt;a href="https://docs.spring.io/spring-batch/docs/5.0.0-M5/reference/html/index-single.html"&gt;Reference documentation&lt;/a&gt;&lt;/p&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
   <entry>
     <title>This Week in Spring - August 23rd, 2022</title>
     <link rel="alternate" href="https://spring.io/blog/2022/08/23/this-week-in-spring-august-23rd-2022" />
@@ -422,65 +481,6 @@
 &lt;p&gt;Detailed changes can be found here: &lt;a href="https://github.com/spring-projects/sts4/wiki/Changelog#2022-08-03-4152-release-incl-language-servers-version-1370"&gt;https://github.com/spring-projects/sts4/wiki/Changelog#2022-08-03-4152-release-incl-language-servers-version-1370&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Spring Tools 4.16.0 is scheduled to be released in mid September 2022.&lt;/p&gt;
 &lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring for Apache Kafka 2.9.0 Available</title>
-    <link rel="alternate" href="https://spring.io/blog/2022/08/02/spring-for-apache-kafka-2-9-0-available" />
-    <category term="releases" label="Releases" />
-    <author>
-      <name>Gary Russell</name>
-    </author>
-    <id>tag:spring.io,2022-08-02:4872</id>
-    <updated>2022-08-02T16:05:26Z</updated>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;I am pleased to announce that Spring for Apache Kafka 2.9.0 is now available.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;This version is not provided by Spring Boot dependency management, but it can be used with Boot 2.7 (or 2.6), as long as you override the Kafka dependencies to 3.2.0 as described in &lt;a href="https://docs.spring.io/spring-kafka/docs/2.9.0/reference/html/#update-deps"&gt;this appendix&lt;/a&gt;, especially if you are using the embedded Kafka broker.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Please see the &lt;a href="https://spring.io/blog/2022/07/07/spring-for-apache-kafka-2-9-release-candidate-available"&gt;release candidate announcement&lt;/a&gt; for notable changes in this release.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;For information about all changes in this release, see &lt;a href="https://docs.spring.io/spring-kafka/docs/2.9.0/reference/html/#whats-new-part"&gt;What&amp;#8217;s New&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;a href="https://spring.io/projects/spring-kafka/"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-kafka"&gt;GitHub&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-kafka/issues"&gt;Issues&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-kafka/docs/2.9.0/reference/html/"&gt;Documentation&lt;/a&gt; | &lt;a href="https://stackoverflow.com/questions/tagged/spring-kafka"&gt;Stack Overflow&lt;/a&gt; | &lt;a href="https://gitter.im/spring-projects/spring-kafka"&gt;Gitter&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>This Week in Spring - August 1st, 2022</title>
-    <link rel="alternate" href="https://spring.io/blog/2022/08/02/this-week-in-spring-august-1st-2022" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Josh Long</name>
-    </author>
-    <id>tag:spring.io,2022-08-02:4871</id>
-    <updated>2022-08-02T07:00:00Z</updated>
-    <content type="html">&lt;p&gt;Aloha, Spring fans! Welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;!&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m still on vacation on the beautiful island of Maui, Hawaii, but I wanted to say hello (&amp;ldquo;aloha!&amp;rdquo;) and share this week&amp;rsquo;s latest roundup of all that&amp;rsquo;s good and glorious in the wide and wonderful world of Springdom.&lt;/p&gt;
-&lt;p&gt;Funny thing, today - the 2nd of August, 2022 - is also my 12-year anniversary on the Spring team. It continues to be a helluva ride, and I so look forward to all that lies ahead. Thank you, Spring team, for everything. Also, sort of coincidentally, I just got a nice promotion. (Thanks, Spring team and VMware). I&amp;rsquo;m also just about to hit 60,000 followers on Twitter. It&amp;rsquo;s been a weird, wonderful week, and not just because of all that, but because we&amp;rsquo;ve got a ton of great stuff to dive into this week (besides the ocean, which I&amp;rsquo;ll return to promptly after finishing this roundup)!&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/07/28/spring-authorization-server-is-going-1-0"&gt;Spring Authorization Server Is Going 1.0&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://medium.com/javarevisited/understanding-logging-in-spring-boot-ac0fd79177b4"&gt;I liked this look at logging in Spring Boot&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://medium.com/@hubian/16-best-practices-in-spring-boot-production-62c065a6145c"&gt;16 Best Practices in Spring Boot Production&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://springbootlearning.medium.com/5-ways-to-find-data-with-spring-data-91766c74fa8e"&gt;5 ways to find data with Spring Data&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=EYZcRbQTqaI"&gt;How To Create Kubernetes Controller Using Spring Boot, which is inspired by the talk that Cora and I gave at Spring I/O&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/07/31/how-to-integrate-hibernates-multitenant-feature-with-spring-data-jpa-in-a-spring-boot-application"&gt;How to integrate Hibernates Multitenant feature with Spring Data JPA in a Spring Boot application&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=ZaGnGs9TeNc"&gt;Java Q&amp;A; Leyden, Valhalla, Amber, and more! - Inside Java Newscast #30&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://www.eventbrite.co.uk/e/ljc-real-time-stream-processing-in-spring-made-easy-tickets-393901569197"&gt;Register for this talk at the London Java Comunity to learn about one way to achieve real-time stream processing in Spring&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;This is a pretty interesting plugin for mocking with IntelliJ IDEA using Mockito: &lt;a href="https://plugins.jetbrains.com/plugin/18117-mockitools"&gt;Mockitools&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://feeds.feedblitz.com/~/703920310/0/baeldung~Reading-Flux-Into-a-Single-InputStream-Using-Spring-Reactive-WebClient"&gt;Reading Flux Into a Single InputStream Using Spring Reactive WebClient&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://feeds.feedblitz.com/~/704772732/0/baeldung~Spring-Boot-and-Spring-Framework-Whats-New"&gt;Spring Boot 3 and Spring Framework 6.0 ? What¡¯s New&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/08/01/spring-cloud-2022-0-0-m4-codename-kilburn-has-been-released"&gt;Spring Cloud 2022.0.0-M4 (codename Kilburn) Has Been Released&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2022/07/27/spring-cloud-openfeign-3-0-8-is-now-available"&gt;Spring Cloud OpenFeign 3.0.8 is now available&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://feeds.feedblitz.com/~/704434220/0/baeldung~Spring-Security-Upgrading-the-Deprecated-WebSecurityConfigurerAdapter"&gt;Spring Security: Upgrading the Deprecated WebSecurityConfigurerAdapter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://feeds.feedblitz.com/~/703920308/0/baeldung~Testing-Spring-JMS"&gt;Testing Spring JMS&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://feeds.feedblitz.com/~/704770536/0/baeldung~Using-Environment-Variables-in-Spring-Boots-applicationproperties"&gt;Using Environment Variables in Spring Boot¡¯s application.properties&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://github.com/making/tap-automation-on-aks"&gt;&lt;code&gt;making/tap-automation-on-aks&lt;/code&gt;: TAP Automation on AKS&lt;/a&gt; - this is a nice solution by my teammate Toshiaki Maki that uses Tekton to setup Tanzu Application Platform on AKS.&lt;/li&gt;
-&lt;/ul&gt;
 &lt;!-- rendered by Sagan Renderer Service --&gt;</content>
   </entry>
 </feed>

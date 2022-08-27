@@ -16,7 +16,7 @@ travelInsertForm.jsp<br>
 	<h1><span>여행 정보 등록 화면</span></h1>
 	<p>
 		<label for="name">이름</label>
-		<input type="text" name="name" value="${t.name }">
+		<input type="text" name="name" id="name" value="${t.name }">
 		<form:errors cssClass="e" path="name"/>
 	</p>
 

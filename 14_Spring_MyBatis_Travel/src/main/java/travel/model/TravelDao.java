@@ -44,6 +44,26 @@ public List<TravelBean> getAllData(Map<String,String>map,Paging page){
 		System.out.println("가져온 레코드 갯수 : "+count);
 		return count;
 	}
+//====================================================================================
+	public TravelBean getDataByNum(String num) {
+		
+		TravelBean tb = sqlSessionTemplate.selectOne(namespace+".GetDataByNum",num);
+		
+		return tb;
+	}
 	
-
+//====================================================================================
+	public void updateData(TravelBean tb) {
+		
+		int cnt = sqlSessionTemplate.update(namespace+".updateTravel",tb);
+		
+		System.out.println("업데이트 결과 : "+cnt);
+	}
+//====================================================================================
+	public void deleteByNum(String num) {
+		
+		int cnt= sqlSessionTemplate.delete(namespace+".DeleteTravel",num);
+		System.out.println("삭제 결과 : "+cnt);
+	}
+//====================================================================================
 }//TravelDao
