@@ -1,0 +1,122 @@
+ DROP TABLE members CASCADE CONSTRAINTS;
+
+drop sequence seqmembers;
+create sequence seqmembers start with 1 increment by 1 nocache ;
+
+
+create table members(
+	id varchar2(10) primary key,
+	name varchar2(30),
+	password varchar2(30),
+	salary number,
+	hiredate date default sysdate,
+	gender varchar2(10),
+	hobby varchar2(70),
+	job varchar2(10),
+	zipcode varchar2(7),
+	address1 varchar2(30),
+	address2 varchar2(30),
+	mpoint number default 0
+) ;
+insert into members(id,name,password,salary,hiredate,gender,hobby,job,zipcode)
+values('kim','김철수','1234',100,sysdate,'남자','게임','학생','123-456');
+
+insert into members(id,name,password,salary,hiredate,gender,hobby,job,zipcode)
+values('hong','홍길동','1234',100,sysdate,'남자','공부','학생','123-456');
+
+insert into members(id,name,password,salary,hiredate,gender,hobby,job,zipcode)
+values('park','권지현','1234',100,sysdate,'여자','마라톤,공부','학생','123-456');
+
+commit ;
+
+col id for a6
+col password for a8
+col name for a8
+col gender for a6
+col hobby for a15
+col address1 for a10
+col address2 for a10
+col job for a6
+select * from members;
+
+
+
+-------------------------------------------------------------------------------------
+-- 상품 테이블
+-------------------------------------------------------------------------------------
+drop sequence seqprod ;
+create sequence seqprod start with 1 increment by 1 nocache ;
+
+DROP TABLE products CASCADE CONSTRAINTS;
+
+-- name : 상품명, company : 제조 회사, image : 상품 이미지 
+-- stock : 재고 수량, point : 적립 포인트, inputdate : 입고 일자, category : 카테고리
+create table products(
+	num 		int primary key,
+	name 		varchar2(50) not null,	
+	company 	varchar2(50),
+	image   	varchar2(30),
+	stock		 int default 0,
+	price   	int default 0,
+	category   	varchar2(12),
+	contents 	varchar2(300),
+	point   	int default 0,
+	inputdate 	date default sysdate 
+);
+
+-------------------------------------------------------------------------------------
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '소보루', '샤니', 'smile.jpg', 100, 1000, 'bread', '맛있어요', 10, sysdate );		
+
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '크림빵', '샤넬', 'smile.jpg', 50, 2000, 'bread', '맛있어요', 20, sysdate );		
+
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '콜라', '코카', 'smile.jpg', 30, 3000, 'beverage', '탁쏩니다', 30, sysdate );
+
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '사이다', '칠성', 'smile.jpg', 40, 4000, 'beverage', '탁쏩니다', 40, sysdate );
+
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '환타', '코카', 'smile.jpg', 50, 5000, 'beverage', '탁쏩니다', 50, sysdate );
+
+insert into products(num, name, company, image, stock, price, category, contents, point, inputdate)
+values(seqprod.nextval, '치킨', '네네', 'smile.jpg', 50, 5000, 'chicken', '맛없어요', 60, sysdate);	
+
+commit ;
+  
+-------------------------------------------------------------------------------------
+-- 주문 (매출) 테이블
+-------------------------------------------------------------------------------------
+drop sequence seqoid ;
+create sequence seqoid start with 1 increment by 1 nocache ;
+DROP TABLE orders CASCADE CONSTRAINTS;
+
+-- orders : 주문 테이블
+-- orderdate : 주문 일자
+-- on delete set null : 회원이 탈퇴하더라도 매출 데이터는 남겨 둬야 한다.
+-- oid : 주문(송장) 번호, mid : 회원 번호, orderdate : 주문 일자
+create table orders(
+  oid number primary key,
+  mid varchar2(10) references members(id) on delete set null,
+  orderdate date default sysdate 
+);
+
+  
+  
+------------------------------------------------------------------------------------------------------
+-- orderdetails : 주문 상세 테이블
+-------------------------------------------------------------------------------------
+drop sequence seqodid;
+create sequence seqodid start with 1 increment by 1 nocache ;
+
+-- oid : 주문번호,  pnum : 상품 번호,  qty : 주문 수량
+drop table orderdetails purge ;
+
+create table orderdetails(
+  odid number primary key,
+  oid number references orders(oid) on delete cascade,
+  pnum number references products(num) on delete set null,
+  qty number
+); 
+

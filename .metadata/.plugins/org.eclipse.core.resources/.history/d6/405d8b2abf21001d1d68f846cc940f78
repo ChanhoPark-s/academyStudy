@@ -1,5 +1,0 @@
-package com.spring.ex.command;
-
-public class PDeleteCommand {
-
-}

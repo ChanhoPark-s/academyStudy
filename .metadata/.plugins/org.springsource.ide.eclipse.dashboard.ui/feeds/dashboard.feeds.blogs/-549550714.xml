@@ -5,7 +5,291 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2022-08-25T07:00:00Z</updated>
+  <updated>2022-08-27T05:15:00Z</updated>
+  <entry>
+    <title>Creating a custom Spring Cloud Gateway Filter</title>
+    <link rel="alternate" href="https://spring.io/blog/2022/08/26/creating-a-custom-spring-cloud-gateway-filter" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Fredrich Ombico</name>
+    </author>
+    <id>tag:spring.io,2022-08-26:4894</id>
+    <updated>2022-08-27T05:15:00Z</updated>
+    <content type="html">&lt;p&gt;In this article, we look into writing a custom extension for Spring Cloud Gateway. Before we get started, let¡¯s go over how Spring Cloud Gateway works:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://static.spring.io/blog/fombico/20220826/spring-cloud-gateway-diagram.png" alt="Spring Cloud Gateway diagram" /&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;First, a client makes a network request to the Gateway&lt;/li&gt;
+  &lt;li&gt;The Gateway is defined with a number of routes, each with Predicates to match the request to the route. For example, you can match on the path segment of the URL or the HTTP method of the request.&lt;/li&gt;
+  &lt;li&gt;Once matched, the Gateway executes pre-request logic on each of the filters applied to the route. For example, you might want to add query parameters to your request&lt;/li&gt;
+  &lt;li&gt;A proxy filter routes the request to the proxied service&lt;/li&gt;
+  &lt;li&gt;The service executes and returns a response&lt;/li&gt;
+  &lt;li&gt;The gateway receives the response and executes post-request logic on each filter before returning the response. For example, you could remove unwanted response headers before returning to the client.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Our extension will be hashing the request body, adding the value as a request header called &lt;code&gt;X-Hash&lt;/code&gt;. This corresponds to Step 3 in the diagram above. Note: as we are reading the request body, the gateway will be memory constrained.&lt;/p&gt;
+&lt;p&gt;First, we create a project at &lt;a href="https://start.spring.io/"&gt;start.spring.io&lt;/a&gt; with the Gateway dependency. In this example, we¡¯ll be using a Gradle project in Java with JDK 17 and Spring Boot 2.7.3. Download, unzip, and open the project in your favorite IDE and run it to ensure you are set up for local development.&lt;/p&gt;
+&lt;p&gt;Next let¡¯s create the GatewayFilter Factory, which is a filter scoped to a particular route, that allows us to modify an incoming HTTP request or outgoing HTTP response in some manner. In our case, we¡¯ll be modifying the incoming HTTP request with an additional header:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;package com.example.demo;&#xD;
+&#xD;
+import java.security.MessageDigest;&#xD;
+import java.security.NoSuchAlgorithmException;&#xD;
+import java.util.Collections;&#xD;
+import java.util.List;&#xD;
+&#xD;
+import org.bouncycastle.util.encoders.Hex;&#xD;
+import reactor.core.publisher.Mono;&#xD;
+&#xD;
+import org.springframework.cloud.gateway.filter.GatewayFilter;&#xD;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;&#xD;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;&#xD;
+import org.springframework.http.codec.HttpMessageReader;&#xD;
+import org.springframework.http.server.reactive.ServerHttpRequest;&#xD;
+import org.springframework.stereotype.Component;&#xD;
+import org.springframework.util.Assert;&#xD;
+import org.springframework.web.reactive.function.server.HandlerStrategies;&#xD;
+import org.springframework.web.reactive.function.server.ServerRequest;&#xD;
+&#xD;
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.CACHED_SERVER_HTTP_REQUEST_DECORATOR_ATTR;&#xD;
+&#xD;
+/**&#xD;
+ * This filter hashes the request body, placing the value in the X-Hash header.&#xD;
+ * Note: This causes the gateway to be memory constrained.&#xD;
+ * Sample usage: RequestHashing=SHA-256&#xD;
+ */&#xD;
+@Component&#xD;
+public class RequestHashingGatewayFilterFactory extends&#xD;
+        AbstractGatewayFilterFactory&amp;lt;RequestHashingGatewayFilterFactory.Config&amp;gt; {&#xD;
+&#xD;
+    private static final String HASH_ATTR = &amp;quot;hash&amp;quot;;&#xD;
+    private static final String HASH_HEADER = &amp;quot;X-Hash&amp;quot;;&#xD;
+    private final List&amp;lt;HttpMessageReader&amp;lt;?&amp;gt;&amp;gt; messageReaders =&#xD;
+            HandlerStrategies.withDefaults().messageReaders();&#xD;
+&#xD;
+    public RequestHashingGatewayFilterFactory() {&#xD;
+        super(Config.class);&#xD;
+    }&#xD;
+&#xD;
+    @Override&#xD;
+    public GatewayFilter apply(Config config) {&#xD;
+        MessageDigest digest = config.getMessageDigest();&#xD;
+        return (exchange, chain) -&amp;gt; ServerWebExchangeUtils&#xD;
+                .cacheRequestBodyAndRequest(exchange, (httpRequest) -&amp;gt; ServerRequest&#xD;
+                    .create(exchange.mutate().request(httpRequest).build(),&#xD;
+                            messageReaders)&#xD;
+                    .bodyToMono(String.class)&#xD;
+                    .doOnNext(requestPayload -&amp;gt; exchange&#xD;
+                            .getAttributes()&#xD;
+                            .put(HASH_ATTR, computeHash(digest, requestPayload)))&#xD;
+                    .then(Mono.defer(() -&amp;gt; {&#xD;
+                        ServerHttpRequest cachedRequest = exchange.getAttribute(&#xD;
+                                CACHED_SERVER_HTTP_REQUEST_DECORATOR_ATTR);&#xD;
+                        Assert.notNull(cachedRequest, &#xD;
+                                &amp;quot;cache request shouldn&amp;#39;t be null&amp;quot;);&#xD;
+                        exchange.getAttributes()&#xD;
+                                .remove(CACHED_SERVER_HTTP_REQUEST_DECORATOR_ATTR);&#xD;
+&#xD;
+                        String hash = exchange.getAttribute(HASH_ATTR);&#xD;
+                        cachedRequest = cachedRequest.mutate()&#xD;
+                                .header(HASH_HEADER, hash)&#xD;
+                                .build();&#xD;
+                        return chain.filter(exchange.mutate()&#xD;
+                                .request(cachedRequest)&#xD;
+                                .build());&#xD;
+                    })));&#xD;
+    }&#xD;
+&#xD;
+    @Override&#xD;
+    public List&amp;lt;String&amp;gt; shortcutFieldOrder() {&#xD;
+        return Collections.singletonList(&amp;quot;algorithm&amp;quot;);&#xD;
+    }&#xD;
+&#xD;
+    private String computeHash(MessageDigest messageDigest, String requestPayload) {&#xD;
+        return Hex.toHexString(messageDigest.digest(requestPayload.getBytes()));&#xD;
+    }&#xD;
+&#xD;
+    static class Config {&#xD;
+&#xD;
+        private MessageDigest messageDigest;&#xD;
+&#xD;
+        public MessageDigest getMessageDigest() {&#xD;
+            return messageDigest;&#xD;
+        }&#xD;
+&#xD;
+        public void setAlgorithm(String algorithm) throws NoSuchAlgorithmException {&#xD;
+            messageDigest = MessageDigest.getInstance(algorithm);&#xD;
+        }&#xD;
+    }&#xD;
+}&#xD;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let¡¯s take a more detailed look at the code:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;We added the &lt;code&gt;@Component&lt;/code&gt; annotation to the class. Spring Cloud Gateway needs to be able to detect this class in order to use it. Alternatively, we could define an instance with &lt;code&gt;@Bean&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;In our class name, we use &lt;code&gt;GatewayFilterFactory&lt;/code&gt; as a suffix. When adding this filter in the &lt;code&gt;application.yaml&lt;/code&gt; we do not include the suffix, just &lt;code&gt;RequestHashing&lt;/code&gt;. This is a Spring Cloud Gateway filter naming convention.&lt;/li&gt;
+  &lt;li&gt;Our class also extends the &lt;code&gt;AbstractGatewayFilterFactory&lt;/code&gt; similar to all other Spring Cloud Gateway filters. We also specify a class to configure our filter, a nested static class called &lt;code&gt;Config&lt;/code&gt; helps keep things simple. The configuration class allows us to set which hashing algorithm to use.&lt;/li&gt;
+  &lt;li&gt;The overridden &lt;code&gt;apply&lt;/code&gt; method is where all the work takes place. In the parameter, we are given an instance of our configuration class, where we can access the &lt;code&gt;MessageDigest&lt;/code&gt; instance for hashing. Next, we see &lt;code&gt;(exchange, chain)&lt;/code&gt;, a lambda of the &lt;code&gt;GatewayFilter&lt;/code&gt; interface class being returned. The exchange, which is an instance of &lt;code&gt;ServerWebExchange&lt;/code&gt;, provides Gateway filters access to the HTTP request and response. For our case, we want to modify the HTTP request, and this requires us to mutate the exchange.&lt;/li&gt;
+  &lt;li&gt;We need to read the request body to produce the hash, however, as the body is stored in a byte buffer, it can only be read once in the filter. By using &lt;code&gt;ServerWebExchangeUtils&lt;/code&gt; we cache the request as an attribute in the exchange. Attributes provide a way to share data for a particular request across a filter chain. We¡¯ll also store the computed hash of the request body.&lt;/li&gt;
+  &lt;li&gt;We use the exchange attributes to acquire the cached request and the computed hash. We then mutate the exchange by adding the hash header before finally sending it off to the next filter in the chain.&lt;/li&gt;
+  &lt;li&gt;The &lt;code&gt;shortcutFieldOrder&lt;/code&gt; method helps to map the number and order of arguments to the filter. The &lt;code&gt;algorithm&lt;/code&gt; string matches to the setter in the &lt;code&gt;Config&lt;/code&gt; class.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To test the code, we¡¯ll be using WireMock. Add the dependency to your &lt;code&gt;build.gradle&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;testImplementation &amp;#39;com.github.tomakehurst:wiremock:2.27.2&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here we have one test checking the presence and value of the header, and another test to check the header is absent if there is no request body:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;package com.example.demo;&#xD;
+&#xD;
+import java.security.MessageDigest;&#xD;
+import java.security.NoSuchAlgorithmException;&#xD;
+&#xD;
+import com.github.tomakehurst.wiremock.WireMockServer;&#xD;
+import com.github.tomakehurst.wiremock.client.WireMock;&#xD;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;&#xD;
+import org.bouncycastle.jcajce.provider.digest.SHA512;&#xD;
+import org.bouncycastle.util.encoders.Hex;&#xD;
+import org.junit.jupiter.api.AfterEach;&#xD;
+import org.junit.jupiter.api.Test;&#xD;
+&#xD;
+import org.springframework.beans.factory.annotation.Autowired;&#xD;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;&#xD;
+import org.springframework.boot.test.context.SpringBootTest;&#xD;
+import org.springframework.boot.test.context.TestConfiguration;&#xD;
+import org.springframework.cloud.gateway.filter.GatewayFilter;&#xD;
+import org.springframework.cloud.gateway.route.RouteLocator;&#xD;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;&#xD;
+import org.springframework.context.annotation.Bean;&#xD;
+import org.springframework.http.HttpStatus;&#xD;
+import org.springframework.test.web.reactive.server.WebTestClient;&#xD;
+&#xD;
+import static com.example.demo.RequestHashingGatewayFilterFactory.*;&#xD;
+import static com.example.demo.RequestHashingGatewayFilterFactoryTest.*;&#xD;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;&#xD;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;&#xD;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;&#xD;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;&#xD;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;&#xD;
+&#xD;
+@SpringBootTest(&#xD;
+        webEnvironment = RANDOM_PORT,&#xD;
+        classes = RequestHashingFilterTestConfig.class)&#xD;
+@AutoConfigureWebTestClient&#xD;
+class RequestHashingGatewayFilterFactoryTest {&#xD;
+&#xD;
+    @TestConfiguration&#xD;
+    static class RequestHashingFilterTestConfig {&#xD;
+&#xD;
+        @Autowired&#xD;
+        RequestHashingGatewayFilterFactory requestHashingGatewayFilter;&#xD;
+&#xD;
+        @Bean(destroyMethod = &amp;quot;stop&amp;quot;)&#xD;
+        WireMockServer wireMockServer() {&#xD;
+            WireMockConfiguration options = wireMockConfig().dynamicPort();&#xD;
+            WireMockServer wireMock = new WireMockServer(options);&#xD;
+            wireMock.start();&#xD;
+            return wireMock;&#xD;
+        }&#xD;
+&#xD;
+        @Bean&#xD;
+        RouteLocator testRoutes(RouteLocatorBuilder builder, WireMockServer wireMock)&#xD;
+                throws NoSuchAlgorithmException {&#xD;
+            Config config = new Config();&#xD;
+            config.setAlgorithm(&amp;quot;SHA-512&amp;quot;);&#xD;
+&#xD;
+            GatewayFilter gatewayFilter = requestHashingGatewayFilter.apply(config);&#xD;
+            return builder&#xD;
+                    .routes()&#xD;
+                    .route(predicateSpec -&amp;gt; predicateSpec&#xD;
+                            .path(&amp;quot;/post&amp;quot;)&#xD;
+                            .filters(spec -&amp;gt; spec.filter(gatewayFilter))&#xD;
+                            .uri(wireMock.baseUrl()))&#xD;
+                    .build();&#xD;
+        }&#xD;
+    }&#xD;
+&#xD;
+    @Autowired&#xD;
+    WebTestClient webTestClient;&#xD;
+&#xD;
+    @Autowired&#xD;
+    WireMockServer wireMockServer;&#xD;
+&#xD;
+    @AfterEach&#xD;
+    void afterEach() {&#xD;
+        wireMockServer.resetAll();&#xD;
+    }&#xD;
+&#xD;
+    @Test&#xD;
+    void shouldAddHeaderWithComputedHash() {&#xD;
+        MessageDigest messageDigest = new SHA512.Digest();&#xD;
+        String body = &amp;quot;hello world&amp;quot;;&#xD;
+        String expectedHash = Hex.toHexString(messageDigest.digest(body.getBytes()));&#xD;
+&#xD;
+        wireMockServer.stubFor(WireMock.post(&amp;quot;/post&amp;quot;).willReturn(WireMock.ok()));&#xD;
+&#xD;
+        webTestClient.post().uri(&amp;quot;/post&amp;quot;)&#xD;
+                .bodyValue(body)&#xD;
+                .exchange()&#xD;
+                .expectStatus()&#xD;
+                .isEqualTo(HttpStatus.OK);&#xD;
+&#xD;
+        wireMockServer.verify(postRequestedFor(urlEqualTo(&amp;quot;/post&amp;quot;))&#xD;
+                .withHeader(&amp;quot;X-Hash&amp;quot;, equalTo(expectedHash)));&#xD;
+    }&#xD;
+&#xD;
+    @Test&#xD;
+    void shouldNotAddHeaderIfNoBody() {&#xD;
+        wireMockServer.stubFor(WireMock.post(&amp;quot;/post&amp;quot;).willReturn(WireMock.ok()));&#xD;
+&#xD;
+        webTestClient.post().uri(&amp;quot;/post&amp;quot;)&#xD;
+                .exchange()&#xD;
+                .expectStatus()&#xD;
+                .isEqualTo(HttpStatus.OK);&#xD;
+&#xD;
+        wireMockServer.verify(postRequestedFor(urlEqualTo(&amp;quot;/post&amp;quot;))&#xD;
+                .withoutHeader(&amp;quot;X-Hash&amp;quot;));&#xD;
+    }&#xD;
+}&#xD;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To use the filter in our gateway, we add the &lt;code&gt;RequestHashing&lt;/code&gt; filter to a route in &lt;code&gt;application.yaml&lt;/code&gt;, using SHA-256 as the algorithm:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint yml"&gt;spring:&#xD;
+  cloud:&#xD;
+    gateway:&#xD;
+      routes:&#xD;
+        - id: demo&#xD;
+          uri: https://httpbin.org&#xD;
+          predicates:&#xD;
+            - Path=/post/**&#xD;
+          filters:&#xD;
+            - RequestHashing=SHA-256
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We¡¯re using &lt;a href="https://httpbin.org"&gt;https://httpbin.org&lt;/a&gt; as it shows our request headers in its returned response. Run the app and make a curl request to see the result:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;$&amp;gt; curl --request POST &amp;#39;http://localhost:8080/post&amp;#39; \&#xD;
+--header &amp;#39;Content-Type: application/json&amp;#39; \&#xD;
+--data-raw &amp;#39;{&#xD;
+    &amp;quot;data&amp;quot;: {&#xD;
+        &amp;quot;hello&amp;quot;: &amp;quot;world&amp;quot;&#xD;
+    }&#xD;
+}&amp;#39;&#xD;
+&#xD;
+{&#xD;
+  ...&#xD;
+  &amp;quot;data&amp;quot;: &amp;quot;{\n    \&amp;quot;data\&amp;quot;: {\n        \&amp;quot;hello\&amp;quot;: \&amp;quot;world\&amp;quot;\n    }\n}&amp;quot;,&#xD;
+  &amp;quot;headers&amp;quot;: {&#xD;
+        &amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;,&#xD;
+        &amp;quot;Accept-Encoding&amp;quot;: &amp;quot;gzip, deflate, br&amp;quot;,&#xD;
+        &amp;quot;Content-Length&amp;quot;: &amp;quot;48&amp;quot;,&#xD;
+        &amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,&#xD;
+        &amp;quot;Forwarded&amp;quot;: &amp;quot;proto=http;host=\&amp;quot;localhost:8080\&amp;quot;;for=\&amp;quot;[0:0:0:0:0:0:0:1]:55647\&amp;quot;&amp;quot;,&#xD;
+        &amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;,&#xD;
+        &amp;quot;User-Agent&amp;quot;: &amp;quot;PostmanRuntime/7.29.0&amp;quot;,&#xD;
+        &amp;quot;X-Forwarded-Host&amp;quot;: &amp;quot;localhost:8080&amp;quot;,&#xD;
+        &amp;quot;X-Hash&amp;quot;: &amp;quot;1bd93d38735501b5aec7a822f8bc8136d9f1f71a30c2020511bdd5df379772b8&amp;quot;&#xD;
+    },&#xD;
+  ...&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In summary, we saw how to write a custom extension for Spring Cloud Gateway. Our filter read the body of the request to produce a hash that we added as a request header. We also wrote tests for the filter using WireMock to check the header value. Finally, we ran a gateway with the filter to verify the result.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re planning to deploy Spring Cloud Gateway on a Kubernetes cluster, be sure to checkout &lt;a href="https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/index.html"&gt;VMware Spring Cloud Gateway for Kubernetes&lt;/a&gt;. In addition to supporting open-source Spring Cloud Gateway filters and custom filters, such as the one we wrote above, it comes with &lt;a href="https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/1.1/scg-k8s/GUID-route-filters.html"&gt;even more built-in filters&lt;/a&gt; to manipulate your request and responses. Spring Cloud Gateway for Kubernetes handles cross-cutting concerns on behalf of API development teams, such as: Single Sign-On (SSO), access control, rate limiting, resiliency, security, and more. &lt;/p&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
   <entry>
     <title>A Bootiful Podcast: Fellow Java Champion and TimescaleDB developer advocate Christoph Engelbert</title>
     <link rel="alternate" href="https://spring.io/blog/2022/08/25/a-bootiful-podcast-fellow-java-champion-and-timescaledb-developer-advocate-christoph-engelbert" />
@@ -451,36 +735,6 @@
     <updated>2022-08-04T09:00:00Z</updated>
     <content type="html">&lt;p&gt;Hi, Spring fans! In this installment, Josh Long (@starbuxman) talks to Spring observability guru Jonatan Ivanov (@jonatan_ivanov) &lt;/p&gt;
 &lt;iframe title="Observability guru Jonatan Ivanov on the future of observability in Spring Boot " allowtransparency="true" height="150" width="100%" style="border: none; min-width: min(100%, 430px);" scrolling="no" data-name="pb-iframe-player" src="https://www.podbean.com/player-v2/?i=u75nq-128e1d4-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7"&gt;&lt;/iframe&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Tools 4.15.2 released</title>
-    <link rel="alternate" href="https://spring.io/blog/2022/08/04/spring-tools-4-15-2-released" />
-    <category term="releases" label="Releases" />
-    <author>
-      <name>Martin Lippert</name>
-    </author>
-    <id>tag:spring.io,2022-08-04:4873</id>
-    <updated>2022-08-04T08:50:00Z</updated>
-    <content type="html">&lt;p&gt;Dear Spring Community,&lt;/p&gt;
-&lt;p&gt;I am happy to announce the 4.15.2 release of the Spring Tools 4 for Eclipse, Visual Studio Code, and Theia.&lt;/p&gt;&lt;h4&gt;&lt;a href="#fixes-and-improvements" class="anchor" name="fixes-and-improvements"&gt;&lt;/a&gt;fixes and improvements&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;em&gt;(Spring Boot)&lt;/em&gt; fixed: Validation errors on @@ placeholders in YAML editor (&lt;a href="https://github.com/spring-projects/sts4/issues/711"&gt;#711&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(VSCode)&lt;/em&gt; fixed: Live process is not auto connected when app is launched in internalConsole (&lt;a href="https://github.com/spring-projects/sts4/issues/794"&gt;#794&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Eclipse)&lt;/em&gt; fixed: Cleanup / reduce verbosity of diagnostic output in Eclipse logs (&lt;a href="https://github.com/spring-projects/sts4/issues/798"&gt;#798&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Eclipse)&lt;/em&gt; fixed: &lt;code&gt;Not properly disposed SWT resource&lt;/code&gt; was caused Spring Starter Project (&lt;a href="https://github.com/spring-projects/sts4/issues/797"&gt;#797&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Eclipse)&lt;/em&gt; fixed: avoid live hover connection attempt when deploying app to docker without actuator (&lt;a href="https://github.com/spring-projects/sts4/issues/716"&gt;#716&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Eclipse)&lt;/em&gt; fixed: Devtools integration with boot dash docker is broken (&lt;a href="https://github.com/spring-projects/sts4/issues/724"&gt;#724&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Eclipse)&lt;/em&gt; fixed: Pause / Resume for docker boot dash malfunctions (&lt;a href="https://github.com/spring-projects/sts4/issues/783"&gt;#783&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;(Concourse)&lt;/em&gt; fixed: Concourse extension (in vscode) doesn&amp;rsquo;t allow on_error in Steps (&lt;a href="https://github.com/spring-projects/sts4/issues/737"&gt;#737&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;To download the distribution for Eclipse and find links to the marketplace entries for Visual Studio Code and Theia, please go visit:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Spring Tools 4: &lt;a href="https://spring.io/tools/"&gt;https://spring.io/tools/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Detailed changes can be found here: &lt;a href="https://github.com/spring-projects/sts4/wiki/Changelog#2022-08-03-4152-release-incl-language-servers-version-1370"&gt;https://github.com/spring-projects/sts4/wiki/Changelog#2022-08-03-4152-release-incl-language-servers-version-1370&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Spring Tools 4.16.0 is scheduled to be released in mid September 2022.&lt;/p&gt;
-&lt;p&gt;Enjoy!&lt;/p&gt;
 &lt;!-- rendered by Sagan Renderer Service --&gt;</content>
   </entry>
 </feed>

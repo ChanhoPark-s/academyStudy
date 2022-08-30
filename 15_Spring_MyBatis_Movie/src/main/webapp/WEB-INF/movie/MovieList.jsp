@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+	<script>
+		function insertForm(){
+			
+			location.href = "insert.mv";
+		}
+	
+		function update(pageNumber,num){
+			
+			location.href= "update.mv?num="+num+"&pageNumber="+pageNumber;
+		}
+	</script>
 
 <%@include file="../../taglib.jsp"%>
 
@@ -23,7 +35,7 @@
 
 <table border=1>
 	<tr align=right>
-		<td colspan=9><input type="button" value="추가하기" onclick="">
+		<td colspan=9><input type="button" value="추가하기" onclick="insertForm()">
 		</td>
 	</tr>
 	<tr align=center>
@@ -41,14 +53,14 @@
 		<c:forEach var="mb" items="${lists}">
 			<tr align=center>
 				<td>${mb.num}</td>
-				<td><a href="">${mb.title}</a></td>
+				<td><a href="Detail.mv?num=${mb.num }&pageNumber=${pageInfo.pageNumber}">${mb.title}</a></td>
 				<td>${mb.continent}</td>
 				<td>${mb.nation}</td>
 				<td>${mb.genre}</td>
 				<td>${mb.grade}</td>
 				<td>${mb.actor}</td>
-				<td><a href="">삭제</a></td>
-				<td><input type="button" value="수정" onclick=""></td>
+				<td><a href="delete.mv?num=${mb.num }&pageNumber=${pageInfo.pageNumber}">삭제</a></td>
+				<td><input type="button" value="수정" onclick="update(${pageInfo.pageNumber},${mb.num })"></td>
 			</tr>
 		</c:forEach>
 </table>

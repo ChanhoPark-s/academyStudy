@@ -49,10 +49,9 @@ public class movieListController {
 		
 		lists=movieDao.getMovieList(pageInfo,map);  
 		 
-		mav.setViewName(getPage);
 		mav.addObject("lists", lists);
 		mav.addObject("pageInfo", pageInfo);
-		
+		mav.setViewName(getPage);
 		return mav;
 	}
 

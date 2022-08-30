@@ -1,7 +1,0 @@
-package com.spring.ex.controller;
-
-import org.springframework.ui.Model;
-
-public interface PCommand {
-	void execute(Model model);
-}

@@ -1,16 +1,25 @@
 package movie.model;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class MovieBean {
 	
 	private int num;
+	
+	@NotBlank(message = "필수 입력사항입니다")
 	private String title;
+	@NotBlank(message = "대륙 필수 입력사항입니다")
 	private String continent;
+	@NotBlank(message = "나라 필수 입력사항입니다")
 	private String nation;
+	@NotNull(message = "최소 1개 이상 선택하세요")
 	private String genre;
+	@NotNull(message = "필수 입력사항입니다.")
 	private String grade;
+	
+	@NotBlank(message = "출연배우를 입력해주세요")
 	private String actor;
 	
 	public int getNum() {
